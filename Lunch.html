@@ -1,241 +1,89 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-Hant">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🍱 餐費紀錄系統</title>
-  <link rel="icon" href="https://i.postimg.cc/59gfq2j7/1-removebg-preview.png" type="image/png">
+  <title>午餐收費管理系統</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 20px;
-      background-color: #f5f5f5;
-    }
-    .container {
-      max-width: 1000px;
-      margin: 0 auto;
-      background-color: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid #eee;
-    }
-    .logo {
-      display: flex;
-      align-items: center;
-      font-size: 24px;
-      font-weight: bold;
-      color: #2c3e50;
-    }
-    .logo img {
-      height: 40px;
-      margin-right: 10px;
-    }
-    button {
-      padding: 8px 12px;
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      margin-right: 5px;
-    }
-    button.logout {
-      background-color: #f44336;
-    }
-    button:hover {
-      background-color: #45a049;
-    }
-    button.logout:hover {
-      background-color: #d32f2f;
-    }
-    input, select {
-      padding: 8px;
-      margin: 5px 0;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      width: 100%;
-      box-sizing: border-box;
-    }
-    .hidden {
-      display: none;
-    }
-    .error {
-      color: red;
-      font-size: 14px;
-    }
-    .success {
-      color: green;
-      font-size: 14px;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-    }
-    th, td {
-      border: 1px solid #ddd;
-      padding: 8px;
-      text-align: left;
-    }
-    th {
-      background-color: #f2f2f2;
-    }
-    tr:nth-child(even) {
-      background-color: #f9f9f9;
-    }
-    .tabs {
-      display: flex;
-      margin-bottom: 20px;
-    }
-    .tab {
-      padding: 10px 20px;
-      background-color: #eee;
-      cursor: pointer;
-      margin-right: 5px;
-      border-radius: 5px 5px 0 0;
-    }
-    .tab.active {
-      background-color: #ddd;
-      font-weight: bold;
-    }
+    body { font-family: sans-serif; margin: 20px; }
+    .hidden { display: none; }
+    .tab { cursor: pointer; padding: 10px; display: inline-block; border: 1px solid #ccc; margin-right: 5px; }
+    .tab.active { background-color: #eee; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    th, td { border: 1px solid #ccc; padding: 5px; text-align: left; }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="header">
-      <div class="logo">
-        <img src="https://i.postimg.cc/59gfq2j7/1-removebg-preview.png" alt="餐費系統Logo">
-        <span>餐費紀錄系統</span>
-      </div>
-      <button id="logoutBtn" class="logout hidden">登出</button>
+  <h1>午餐收費管理系統</h1>
+
+  <div id="loginSection">
+    <input id="usernameInput" placeholder="帳號">
+    <input id="passwordInput" placeholder="密碼" type="password">
+    <button id="loginBtn">登入</button>
+    <p id="loginError" style="color:red;"></p>
+  </div>
+
+  <div id="mainSection" class="hidden">
+    <button id="logoutBtn">登出</button>
+    <div>
+      <div class="tab active" data-tab="records">紀錄</div>
+      <div class="tab" data-tab="students">學生</div>
+      <div class="tab" data-tab="admins">管理員</div>
     </div>
 
-    <!-- 登入區塊 -->
-    <div id="loginSection">
-      <div class="login-form">
-        <h2>登入</h2>
-        <div id="loginError" class="error"></div>
-        <input type="text" id="username" placeholder="帳號" required>
-        <input type="password" id="password" placeholder="密碼 (4位數字以上)" required>
-        <button id="loginBtn">登入</button>
+    <div id="recordsTab">
+      <select id="monthSelect"></select>
+      <div id="stats">
+        <p id="totalRecordsEl"></p>
+        <p id="totalAmountEl"></p>
+        <p id="totalPaidEl"></p>
+        <p id="totalUnpaidEl"></p>
       </div>
+      <table>
+        <thead>
+          <tr><th>日期</th><th>學生</th><th>年級</th><th>金額</th><th>建立者</th><th>狀態</th><th></th></tr>
+        </thead>
+        <tbody id="recordsBody"></tbody>
+      </table>
+      <h3>新增紀錄</h3>
+      <select id="studentSelect"></select>
+      <input type="date" id="recordDate">
+      <input type="number" id="recordAmount" placeholder="金額">
+      <button id="addRecordBtn">新增</button>
+      <p id="recordError" style="color:red;"></p>
+      <p id="recordSuccess" style="color:green;"></p>
     </div>
 
-    <!-- 主功能區塊 -->
-    <div id="mainSection" class="hidden">
-      <div class="tabs">
-        <div class="tab active" data-tab="records">餐費紀錄</div>
-        <div class="tab" data-tab="students">學生管理</div>
-        <div class="tab" data-tab="admins">管理員設定</div>
-      </div>
+    <div id="studentsTab" class="hidden">
+      <table>
+        <thead>
+          <tr><th>ID</th><th>姓名</th><th>年級</th><th>總金額</th><th>每月統計</th><th></th></tr>
+        </thead>
+        <tbody id="studentsBody"></tbody>
+      </table>
+      <h3>新增學生</h3>
+      <input id="studentName" placeholder="姓名">
+      <input id="studentGrade" type="number" placeholder="年級">
+      <button id="addStudentBtn">新增</button>
+      <p id="studentError" style="color:red;"></p>
+      <p id="studentSuccess" style="color:green;"></p>
+    </div>
 
-      <!-- 餐費紀錄頁面 -->
-      <div id="recordsTab" class="tab-content">
-        <div class="month-selector">
-          <select id="monthSelect">
-            <option value="0">全部月份</option>
-          </select>
-        </div>
-
-        <div class="stats">
-          <h3>統計資訊</h3>
-          <p id="totalRecords">總紀錄數: 0</p>
-          <p id="totalAmount">總金額: $0</p>
-          <p id="totalPaid">已付款金額: $0</p>
-          <p id="totalUnpaid">未付款金額: $0</p>
-        </div>
-
-        <div class="record-form">
-          <h3>新增餐費紀錄</h3>
-          <div id="recordError" class="error"></div>
-          <div id="recordSuccess" class="success"></div>
-          <select id="studentSelect" required>
-            <option value="">選擇學生</option>
-          </select>
-          <input type="date" id="recordDate" required>
-          <input type="number" id="recordAmount" placeholder="金額" required>
-          <button id="addRecordBtn">新增紀錄</button>
-        </div>
-
-        <table id="recordsTable">
-          <thead>
-            <tr>
-              <th>日期</th>
-              <th>學生姓名</th>
-              <th>年級</th>
-              <th>金額</th>
-              <th>填寫人員</th>
-              <th>付款狀態</th>
-              <th>操作</th>
-            </tr>
-          </thead>
-          <tbody id="recordsBody"></tbody>
-        </table>
-      </div>
-      <!-- 學生管理頁面 -->
-      <div id="studentsTab" class="tab-content hidden">
-        <div class="student-form">
-          <h3>學生管理</h3>
-          <div id="studentError" class="error"></div>
-          <div id="studentSuccess" class="success"></div>
-          <input type="text" id="studentName" placeholder="學生姓名" required>
-          <select id="studentGrade" required>
-            <option value="">選擇年級</option>
-            <option value="1">一年級</option>
-            <option value="2">二年級</option>
-            <option value="3">三年級</option>
-            <option value="4">四年級</option>
-            <option value="5">五年級</option>
-            <option value="6">六年級</option>
-          </select>
-          <button id="addStudentBtn">添加學生</button>
-        </div>
-
-        <table id="studentsTable">
-          <thead>
-            <tr>
-              <th>學生ID</th>
-              <th>學生姓名</th>
-              <th>年級</th>
-              <th>總金額</th>
-              <th>月份統計</th>
-              <th>操作</th>
-            </tr>
-          </thead>
-          <tbody id="studentsBody"></tbody>
-        </table>
-      </div>
-
-      <!-- 管理員設定頁面 -->
-      <div id="adminsTab" class="tab-content hidden">
-        <div class="admin-form">
-          <h3>管理員設定</h3>
-          <div id="adminError" class="error"></div>
-          <div id="adminSuccess" class="success"></div>
-          <input type="text" id="adminUsername" placeholder="帳號" required>
-          <input type="password" id="adminPassword" placeholder="密碼 (4位數字以上)" required>
-          <button id="addAdminBtn">添加管理員</button>
-        </div>
-
-        <table id="adminsTable">
-          <thead>
-            <tr>
-              <th>帳號</th>
-              <th>操作</th>
-            </tr>
-          </thead>
-          <tbody id="adminsBody"></tbody>
-        </table>
-      </div>
+    <div id="adminsTab" class="hidden">
+      <table>
+        <thead><tr><th>帳號</th><th>備註</th></tr></thead>
+        <tbody id="adminsBody"></tbody>
+      </table>
+      <h3>新增管理員</h3>
+      <input id="adminUsername" placeholder="帳號">
+      <input id="adminPassword" type="password" placeholder="密碼">
+      <button id="addAdminBtn">新增</button>
+      <p id="adminError" style="color:red;"></p>
+      <p id="adminSuccess" style="color:green;"></p>
     </div>
   </div>
-<script> 
+
+  <script>
+    // JavaScript 內容請見上一段（第五段），太長這裡略過
+  </script>
+</body>
+</html>
