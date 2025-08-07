@@ -1,931 +1,562 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🍱 餐費紀錄系統</title>
-    <link rel="icon" href="https://i.postimg.cc/59gfq2j7/1-removebg-preview.png" type="image/png">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f5f5f5;
-        }
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #eee;
-        }
-        .logo {
-            display: flex;
-            align-items: center;
-            font-size: 24px;
-            font-weight: bold;
-            color: #2c3e50;
-        }
-        .logo img {
-            height: 40px;
-            margin-right: 10px;
-        }
-        .login-form, .admin-form, .record-form, .student-form {
-            background-color: #f9f9f9;
-            padding: 15px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-        button {
-            padding: 8px 12px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-right: 5px;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        button.logout {
-            background-color: #f44336;
-        }
-        button.logout:hover {
-            background-color: #d32f2f;
-        }
-        button.secondary {
-            background-color: #2196F3;
-        }
-        button.secondary:hover {
-            background-color: #0b7dda;
-        }
-        input, select {
-            padding: 8px;
-            margin: 5px 0;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            width: 100%;
-            box-sizing: border-box;
-        }
-        .paid {
-            background-color: #dff0d8;
-        }
-        .unpaid {
-            background-color: #fcf8e3;
-        }
-        .error {
-            color: red;
-            font-size: 14px;
-        }
-        .success {
-            color: green;
-            font-size: 14px;
-        }
-        .month-selector {
-            margin-bottom: 20px;
-        }
-        .hidden {
-            display: none;
-        }
-        .tabs {
-            display: flex;
-            margin-bottom: 20px;
-        }
-        .tab {
-            padding: 10px 20px;
-            background-color: #eee;
-            cursor: pointer;
-            margin-right: 5px;
-            border-radius: 5px 5px 0 0;
-        }
-        .tab.active {
-            background-color: #ddd;
-            font-weight: bold;
-        }
-        .stats {
-            background-color: #f9f9f9;
-            padding: 15px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-        }
-        .stats h3 {
-            margin-top: 0;
-        }
-        .stats p {
-            margin: 5px 0;
-            font-size: 16px;
-        }
-        .total-amount {
-            font-weight: bold;
-            color: #2c3e50;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🍱 餐費紀錄系統</title>
+  <link rel="icon" href="https://i.postimg.cc/59gfq2j7/1-removebg-preview.png" type="image/png">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f5f5f5;
+    }
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #eee;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      font-size: 24px;
+      font-weight: bold;
+      color: #2c3e50;
+    }
+    .logo img {
+      height: 40px;
+      margin-right: 10px;
+    }
+    button {
+      padding: 8px 12px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-right: 5px;
+    }
+    button.logout {
+      background-color: #f44336;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    button.logout:hover {
+      background-color: #d32f2f;
+    }
+    input, select {
+      padding: 8px;
+      margin: 5px 0;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .hidden {
+      display: none;
+    }
+    .error {
+      color: red;
+      font-size: 14px;
+    }
+    .success {
+      color: green;
+      font-size: 14px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+    .tabs {
+      display: flex;
+      margin-bottom: 20px;
+    }
+    .tab {
+      padding: 10px 20px;
+      background-color: #eee;
+      cursor: pointer;
+      margin-right: 5px;
+      border-radius: 5px 5px 0 0;
+    }
+    .tab.active {
+      background-color: #ddd;
+      font-weight: bold;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <div class="logo">
-                <img src="https://i.postimg.cc/59gfq2j7/1-removebg-preview.png" alt="餐費系統Logo">
-                <span>餐費紀錄系統</span>
-            </div>
-            <button id="logoutBtn" class="logout hidden">登出</button>
-        </div>
-
-        <!-- 登入區塊 -->
-        <div id="loginSection">
-            <div class="login-form">
-                <h2>登入</h2>
-                <div id="loginError" class="error"></div>
-                <input type="text" id="username" placeholder="帳號" required>
-                <input type="password" id="password" placeholder="密碼 (4位數字以上)" required>
-                <button id="loginBtn">登入</button>
-            </div>
-        </div>
-
-        <!-- 主功能區塊 (登入後顯示) -->
-        <div id="mainSection" class="hidden">
-            <div class="tabs">
-                <div class="tab active" data-tab="records">餐費紀錄</div>
-                <div class="tab" data-tab="students">學生管理</div>
-                <div class="tab" data-tab="admins">管理員設定</div>
-            </div>
-
-            <!-- 餐費紀錄頁面 -->
-            <div id="recordsTab" class="tab-content">
-                <div class="month-selector">
-                    <select id="monthSelect">
-                        <option value="0">全部月份</option>
-                    </select>
-                </div>
-
-                <div class="stats">
-                    <h3>統計資訊</h3>
-                    <p id="totalRecords">總紀錄數: 0</p>
-                    <p id="totalAmount" class="total-amount">總金額: $0</p>
-                    <p id="totalPaid">已付款金額: $0</p>
-                    <p id="totalUnpaid">未付款金額: $0</p>
-                </div>
-
-                <div class="record-form">
-                    <h3>新增餐費紀錄</h3>
-                    <div id="recordError" class="error"></div>
-                    <div id="recordSuccess" class="success"></div>
-                    <select id="studentSelect" required>
-                        <option value="">選擇學生</option>
-                    </select>
-                    <input type="date" id="recordDate" required>
-                    <input type="number" id="recordAmount" placeholder="金額" required>
-                    <button id="addRecordBtn">新增紀錄</button>
-                </div>
-
-                <table id="recordsTable">
-                    <thead>
-                        <tr>
-                            <th>日期</th>
-                            <th>學生姓名</th>
-                            <th>年級</th>
-                            <th>金額</th>
-                            <th>填寫人員</th>
-                            <th>付款狀態</th>
-                            <th>操作</th>
-                        </tr>
-                    </thead>
-                    <tbody id="recordsBody">
-                        <!-- 紀錄將在這裡動態生成 -->
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- 學生管理頁面 -->
-            <div id="studentsTab" class="tab-content hidden">
-                <div class="student-form">
-                    <h3>學生管理</h3>
-                    <div id="studentError" class="error"></div>
-                    <div id="studentSuccess" class="success"></div>
-                    <input type="text" id="studentName" placeholder="學生姓名" required>
-                    <select id="studentGrade" required>
-                        <option value="">選擇年級</option>
-                        <option value="1">一年級</option>
-                        <option value="2">二年級</option>
-                        <option value="3">三年級</option>
-                        <option value="4">四年級</option>
-                        <option value="5">五年級</option>
-                        <option value="6">六年級</option>
-                    </select>
-                    <button id="addStudentBtn">添加學生</button>
-                </div>
-
-                <table id="studentsTable">
-                    <thead>
-                        <tr>
-                            <th>學生ID</th>
-                            <th>學生姓名</th>
-                            <th>年級</th>
-                            <th>總金額</th>
-                            <th>操作</th>
-                        </tr>
-                    </thead>
-                    <tbody id="studentsBody">
-                        <!-- 學生列表將在這裡動態生成 -->
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- 管理員設定頁面 -->
-            <div id="adminsTab" class="tab-content hidden">
-                <div class="admin-form">
-                    <h3>管理員設定</h3>
-                    <div id="adminError" class="error"></div>
-                    <div id="adminSuccess" class="success"></div>
-                    <input type="text" id="adminUsername" placeholder="帳號" required>
-                    <input type="password" id="adminPassword" placeholder="密碼 (4位數字以上)" required>
-                    <button id="addAdminBtn">添加管理員</button>
-                </div>
-
-                <table id="adminsTable">
-                    <thead>
-                        <tr>
-                            <th>帳號</th>
-                            <th>操作</th>
-                        </tr>
-                    </thead>
-                    <tbody id="adminsBody">
-                        <!-- 管理員列表將在這裡動態生成 -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
+  <div class="container">
+    <div class="header">
+      <div class="logo">
+        <img src="https://i.postimg.cc/59gfq2j7/1-removebg-preview.png" alt="餐費系統Logo">
+        <span>餐費紀錄系統</span>
+      </div>
+      <button id="logoutBtn" class="logout hidden">登出</button>
     </div>
 
-    <script>
-        // 初始化資料
-        let currentUser = null;
-        let isAdmin = false;
-        let refreshInterval;
-        
-        // 從localStorage載入資料或初始化
-        let students = JSON.parse(localStorage.getItem('students')) || [];
-        let records = JSON.parse(localStorage.getItem('records')) || [];
-        let admins = JSON.parse(localStorage.getItem('admins')) || [
-            { username: 'BH19', password: '032188816' }
-        ];
-        
-        // DOM元素
-        const loginSection = document.getElementById('loginSection');
-        const mainSection = document.getElementById('mainSection');
-        const logoutBtn = document.getElementById('logoutBtn');
-        const loginBtn = document.getElementById('loginBtn');
-        const usernameInput = document.getElementById('username');
-        const passwordInput = document.getElementById('password');
-        const loginError = document.getElementById('loginError');
-        const monthSelect = document.getElementById('monthSelect');
-        const studentSelect = document.getElementById('studentSelect');
-        const recordDate = document.getElementById('recordDate');
-        const recordAmount = document.getElementById('recordAmount');
-        const addRecordBtn = document.getElementById('addRecordBtn');
-        const recordsBody = document.getElementById('recordsBody');
-        const studentName = document.getElementById('studentName');
-        const studentGrade = document.getElementById('studentGrade');
-        const addStudentBtn = document.getElementById('addStudentBtn');
-        const studentsBody = document.getElementById('studentsBody');
-        const adminUsername = document.getElementById('adminUsername');
-        const adminPassword = document.getElementById('adminPassword');
-        const addAdminBtn = document.getElementById('addAdminBtn');
-        const adminsBody = document.getElementById('adminsBody');
-        const recordError = document.getElementById('recordError');
-        const recordSuccess = document.getElementById('recordSuccess');
-        const studentError = document.getElementById('studentError');
-        const studentSuccess = document.getElementById('studentSuccess');
-        const adminError = document.getElementById('adminError');
-        const adminSuccess = document.getElementById('adminSuccess');
-        const tabs = document.querySelectorAll('.tab');
-        const tabContents = document.querySelectorAll('.tab-content');
-        const totalRecordsEl = document.getElementById('totalRecords');
-        const totalAmountEl = document.getElementById('totalAmount');
-        const totalPaidEl = document.getElementById('totalPaid');
-        const totalUnpaidEl = document.getElementById('totalUnpaid');
-        
-        // 設置今天為預設日期
-        recordDate.valueAsDate = new Date();
-        
-        // 初始化月份選擇器
-        function initMonthSelect() {
-            monthSelect.innerHTML = '<option value="0">全部月份</option>';
-            
-            // 從紀錄中提取所有月份
-            const months = new Set();
-            records.forEach(record => {
-                const date = new Date(record.date);
-                const monthYear = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
-                months.add(monthYear);
-            });
-            
-            // 排序並添加到選擇器
-            Array.from(months).sort().reverse().forEach(month => {
-                const [year, monthNum] = month.split('-');
-                const option = document.createElement('option');
-                option.value = month;
-                option.textContent = `${year}年${monthNum}月`;
-                monthSelect.appendChild(option);
-            });
-        }
-        
-        // 初始化學生選擇器
-        function initStudentSelect() {
-            studentSelect.innerHTML = '<option value="">選擇學生</option>';
-            students.forEach(student => {
-                const option = document.createElement('option');
-                option.value = student.id;
-                option.textContent = `${student.name} (${student.grade}年級)`;
-                studentSelect.appendChild(option);
-            });
-        }
-        
-        // 更新統計資訊
-        function updateStats(filterMonth = '0') {
-            let filteredRecords = [...records];
-            if (filterMonth !== '0') {
-                filteredRecords = records.filter(record => {
-                    const recordDate = new Date(record.date);
-                    const recordMonth = `${recordDate.getFullYear()}-${String(recordDate.getMonth() + 1).padStart(2, '0')}`;
-                    return recordMonth === filterMonth;
-                });
-            }
-            
-            const totalRecords = filteredRecords.length;
-            const totalAmount = filteredRecords.reduce((sum, r) => sum + parseInt(r.amount), 0);
-            const totalPaid = filteredRecords.filter(r => r.paid).reduce((sum, r) => sum + parseInt(r.amount), 0);
-            const totalUnpaid = totalAmount - totalPaid;
-            
-            totalRecordsEl.textContent = `總紀錄數: ${totalRecords}`;
-            totalAmountEl.textContent = `總金額: $${totalAmount}`;
-            totalPaidEl.textContent = `已付款金額: $${totalPaid}`;
-            totalUnpaidEl.textContent = `未付款金額: $${totalUnpaid}`;
-        }
-        
-        // 顯示紀錄
-        function displayRecords(filterMonth = '0') {
-            recordsBody.innerHTML = '';
-            
-            let filteredRecords = [...records];
-            if (filterMonth !== '0') {
-                filteredRecords = records.filter(record => {
-                    const recordDate = new Date(record.date);
-                    const recordMonth = `${recordDate.getFullYear()}-${String(recordDate.getMonth() + 1).padStart(2, '0')}`;
-                    return recordMonth === filterMonth;
-                });
-            }
-            
-            // 按日期排序 (最新的在前面)
-            filteredRecords.sort((a, b) => new Date(b.date) - new Date(a.date));
-            
-            filteredRecords.forEach(record => {
-                const student = students.find(s => s.id === record.studentId);
-                if (!student) return;
-                
-                const row = document.createElement('tr');
-                row.className = record.paid ? 'paid' : 'unpaid';
-                
-                const date = new Date(record.date);
-                const formattedDate = `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}`;
-                
-                row.innerHTML = `
-                    <td>${formattedDate}</td>
-                    <td>${student.name}</td>
-                    <td>${student.grade}年級</td>
-                    <td>${record.amount}</td>
-                    <td>${record.creator}</td>
-                    <td>
-                        <button class="payment-btn" data-id="${record.id}" ${record.paid ? 'disabled' : ''}>
-                            ${record.paid ? '已付款' : '未付款'}
-                        </button>
-                    </td>
-                    <td>
-                        ${isAdmin ? `<button class="edit-btn" data-id="${record.id}">編輯</button>
-                        <button class="delete-btn" data-id="${record.id}">刪除</button>` : ''}
-                    </td>
-                `;
-                
-                recordsBody.appendChild(row);
-            });
-            
-            // 更新統計資訊
-            updateStats(filterMonth);
-            
-            // 添加事件監聽器
-            document.querySelectorAll('.payment-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const recordId = this.getAttribute('data-id');
-                    markAsPaid(recordId);
-                });
-            });
-            
-            if (isAdmin) {
-                document.querySelectorAll('.edit-btn').forEach(btn => {
-                    btn.addEventListener('click', function() {
-                        const recordId = this.getAttribute('data-id');
-                        editRecord(recordId);
-                    });
-                });
-                
-                document.querySelectorAll('.delete-btn').forEach(btn => {
-                    btn.addEventListener('click', function() {
-                        const recordId = this.getAttribute('data-id');
-                        deleteRecord(recordId);
-                    });
-                });
-            }
-        }
-        
-        // 顯示學生列表
-        function displayStudents() {
-            studentsBody.innerHTML = '';
-            
-            students.forEach(student => {
-                // 計算學生的總金額
-                const totalAmount = records
-                    .filter(r => r.studentId === student.id)
-                    .reduce((sum, r) => sum + parseInt(r.amount), 0);
-                
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${student.id}</td>
-                    <td>${student.name}</td>
-                    <td>${student.grade}年級</td>
-                    <td>${totalAmount}</td>
-                    <td>
-                        ${isAdmin ? `<button class="edit-student-btn" data-id="${student.id}">編輯</button>
-                        <button class="delete-student-btn" data-id="${student.id}">刪除</button>` : ''}
-                    </td>
-                `;
-                
-                studentsBody.appendChild(row);
-            });
-            
-            if (isAdmin) {
-                document.querySelectorAll('.edit-student-btn').forEach(btn => {
-                    btn.addEventListener('click', function() {
-                        const studentId = this.getAttribute('data-id');
-                        editStudent(studentId);
-                    });
-                });
-                
-                document.querySelectorAll('.delete-student-btn').forEach(btn => {
-                    btn.addEventListener('click', function() {
-                        const studentId = this.getAttribute('data-id');
-                        deleteStudent(studentId);
-                    });
-                });
-            }
-        }
-        
-        // 顯示管理員列表
-        function displayAdmins() {
-            adminsBody.innerHTML = '';
-            
-            admins.forEach(admin => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${admin.username}</td>
-                    <td>
-                        ${admin.username !== 'BH19' ? `<button class="delete-admin-btn" data-username="${admin.username}">刪除</button>` : '系統預設'}
-                    </td>
-                `;
-                
-                adminsBody.appendChild(row);
-            });
-            
-            document.querySelectorAll('.delete-admin-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const username = this.getAttribute('data-username');
-                    deleteAdmin(username);
-                });
-            });
-        }
-        
-        // 標記為已付款
-        function markAsPaid(recordId) {
-            const recordIndex = records.findIndex(r => r.id === recordId);
-            if (recordIndex !== -1) {
-                records[recordIndex].paid = true;
-                localStorage.setItem('records', JSON.stringify(records));
-                displayRecords(monthSelect.value);
-                recordSuccess.textContent = '已標記為已付款';
-                setTimeout(() => recordSuccess.textContent = '', 3000);
-            }
-        }
-        
-        // 編輯紀錄
-        function editRecord(recordId) {
-            const record = records.find(r => r.id === recordId);
-            if (!record) return;
-            
-            const student = students.find(s => s.id === record.studentId);
-            const currentStudentName = student ? `${student.name} (${student.grade}年級)` : '未知學生';
-            
-            let newStudentId = record.studentId;
-            let newDate = record.date;
-            let newAmount = record.amount;
-            
-            // 創建編輯表單
-            const form = document.createElement('div');
-            form.innerHTML = `
-                <h3>編輯紀錄</h3>
-                <p>當前學生: ${currentStudentName}</p>
-                <select id="editStudentSelect">
-                    <option value="">不變更學生</option>
-                </select>
-                <input type="date" id="editRecordDate" value="${newDate}">
-                <input type="number" id="editRecordAmount" value="${newAmount}" placeholder="金額">
-                <button id="saveEditBtn">保存</button>
-                <button id="cancelEditBtn">取消</button>
-            `;
-            
-            // 填充學生選擇器
-            const editStudentSelect = form.querySelector('#editStudentSelect');
-            students.forEach(student => {
-                const option = document.createElement('option');
-                option.value = student.id;
-                option.textContent = `${student.name} (${student.grade}年級)`;
-                editStudentSelect.appendChild(option);
-            });
-            
-            // 顯示編輯表單
-            recordSuccess.innerHTML = '';
-            recordSuccess.appendChild(form);
-            
-            // 保存編輯
-            form.querySelector('#saveEditBtn').addEventListener('click', function() {
-                const selectedStudentId = editStudentSelect.value;
-                const editDate = form.querySelector('#editRecordDate').value;
-                const editAmount = form.querySelector('#editRecordAmount').value;
-                
-                if (editAmount && !/^\d+$/.test(editAmount)) {
-                    alert('金額必須是數字');
-                    return;
-                }
-                
-                if (selectedStudentId) newStudentId = selectedStudentId;
-                if (editDate) newDate = editDate;
-                if (editAmount) newAmount = parseInt(editAmount);
-                
-                record.studentId = newStudentId;
-                record.date = newDate;
-                record.amount = newAmount;
-                localStorage.setItem('records', JSON.stringify(records));
-                
-                // 重新初始化學生選擇器和月份選擇器
-                initStudentSelect();
-                initMonthSelect();
-                
-                // 更新顯示
-                displayRecords(monthSelect.value);
-                recordSuccess.textContent = '紀錄已更新';
-                setTimeout(() => recordSuccess.textContent = '', 3000);
-            });
-            
-            // 取消編輯
-            form.querySelector('#cancelEditBtn').addEventListener('click', function() {
-                recordSuccess.textContent = '';
-            });
-        }
-        
-        // 編輯學生
-        function editStudent(studentId) {
-            const student = students.find(s => s.id === studentId);
-            if (!student) return;
-            
-            const newName = prompt("輸入新姓名:", student.name);
-            if (newName === null) return;
-            
-            const newGrade = prompt("輸入新年級 (1-6):", student.grade);
-            if (newGrade === null) return;
-            
-            if (newName && newGrade && /^[1-6]$/.test(newGrade)) {
-                student.name = newName;
-                student.grade = parseInt(newGrade);
-                localStorage.setItem('students', JSON.stringify(students));
-                
-                // 更新顯示
-                initStudentSelect();
-                displayStudents();
-                displayRecords(monthSelect.value);
-                
-                studentSuccess.textContent = '學生資料已更新';
-                setTimeout(() => studentSuccess.textContent = '', 3000);
-            } else {
-                studentError.textContent = '輸入無效，姓名不能為空且年級必須是1-6';
-                setTimeout(() => studentError.textContent = '', 3000);
-            }
-        }
-        
-        // 刪除紀錄
-        function deleteRecord(recordId) {
-            if (confirm('確定要刪除此紀錄嗎？')) {
-                records = records.filter(r => r.id !== recordId);
-                localStorage.setItem('records', JSON.stringify(records));
-                displayRecords(monthSelect.value);
-                recordSuccess.textContent = '紀錄已刪除';
-                setTimeout(() => recordSuccess.textContent = '', 3000);
-            }
-        }
-        
-        // 添加紀錄
-        function addRecord() {
-            const studentId = studentSelect.value;
-            const date = recordDate.value;
-            const amount = recordAmount.value;
-            
-            if (!studentId || !date || !amount) {
-                recordError.textContent = '請填寫所有欄位';
-                return;
-            }
-            
-            if (!/^\d+$/.test(amount)) {
-                recordError.textContent = '金額必須是數字';
-                return;
-            }
-            
-            const newRecord = {
-                id: Date.now().toString(),
-                studentId,
-                date,
-                amount: parseInt(amount),
-                creator: currentUser,
-                paid: false
-            };
-            
-            records.push(newRecord);
-            localStorage.setItem('records', JSON.stringify(records));
-            
-            // 清空表單
-            recordAmount.value = '';
-            recordError.textContent = '';
-            recordSuccess.textContent = '紀錄已添加';
-            setTimeout(() => recordSuccess.textContent = '', 3000);
-            
-            // 更新顯示
-            initMonthSelect();
-            displayRecords(monthSelect.value);
-        }
-        
-        // 添加學生
-        function addStudent() {
-            const name = studentName.value.trim();
-            const grade = studentGrade.value;
-            
-            if (!name || !grade) {
-                studentError.textContent = '請填寫所有欄位';
-                return;
-            }
-            
-            if (!isAdmin) {
-                studentError.textContent = '只有管理員可以添加學生';
-                return;
-            }
-            
-            const newStudent = {
-                id: Date.now().toString(),
-                name,
-                grade: parseInt(grade)
-            };
-            
-            students.push(newStudent);
-            localStorage.setItem('students', JSON.stringify(students));
-            
-            // 清空表單
-            studentName.value = '';
-            studentGrade.value = '';
-            studentError.textContent = '';
-            studentSuccess.textContent = '學生已添加';
-            setTimeout(() => studentSuccess.textContent = '', 3000);
-            
-            // 更新顯示
-            initStudentSelect();
-            displayStudents();
-        }
-        
-        // 刪除學生
-        function deleteStudent(studentId) {
-            if (confirm('確定要刪除此學生嗎？相關紀錄將保留但不再顯示學生姓名。')) {
-                students = students.filter(s => s.id !== studentId);
-                localStorage.setItem('students', JSON.stringify(students));
-                
-                // 更新顯示
-                initStudentSelect();
-                displayStudents();
-                displayRecords(monthSelect.value);
-                
-                studentSuccess.textContent = '學生已刪除';
-                setTimeout(() => studentSuccess.textContent = '', 3000);
-            }
-        }
-        
-        // 添加管理員
-        function addAdmin() {
-            const username = adminUsername.value.trim();
-            const password = adminPassword.value;
-            
-            if (!username || !password) {
-                adminError.textContent = '請填寫所有欄位';
-                return;
-            }
-            
-            if (!isAdmin) {
-                adminError.textContent = '只有管理員可以添加管理員';
-                return;
-            }
-            
-            if (!/^\d{4,}$/.test(password)) {
-                adminError.textContent = '密碼必須是4位數字以上';
-                return;
-            }
-            
-            if (admins.some(a => a.username === username)) {
-                adminError.textContent = '此帳號已存在';
-                return;
-            }
-            
-            const newAdmin = {
-                username,
-                password
-            };
-            
-            admins.push(newAdmin);
-            localStorage.setItem('admins', JSON.stringify(admins));
-            
-            // 清空表單
-            adminUsername.value = '';
-            adminPassword.value = '';
-            adminError.textContent = '';
-            adminSuccess.textContent = '管理員已添加';
-            setTimeout(() => adminSuccess.textContent = '', 3000);
-            
-            // 更新顯示
-            displayAdmins();
-        }
-        
-        // 刪除管理員
-        function deleteAdmin(username) {
-            if (confirm(`確定要刪除管理員 ${username} 嗎？`)) {
-                admins = admins.filter(a => a.username !== username);
-                localStorage.setItem('admins', JSON.stringify(admins));
-                displayAdmins();
-                adminSuccess.textContent = '管理員已刪除';
-                setTimeout(() => adminSuccess.textContent = '', 3000);
-            }
-        }
-        
-        // 自動刷新數據
-        function startAutoRefresh() {
-            if (refreshInterval) clearInterval(refreshInterval);
-            refreshInterval = setInterval(() => {
-                displayRecords(monthSelect.value);
-                displayStudents();
-                displayAdmins();
-            }, 5000); // 每5秒刷新一次
-        }
-        
-        // 停止自動刷新
-        function stopAutoRefresh() {
-            if (refreshInterval) clearInterval(refreshInterval);
-        }
-        
-        // 登入
-        function login() {
-            const username = usernameInput.value.trim();
-            const password = passwordInput.value;
-            
-            if (!username || !password) {
-                loginError.textContent = '請填寫帳號和密碼';
-                return;
-            }
-            
-            // 檢查是否是管理員
-            const admin = admins.find(a => a.username === username && a.password === password);
-            
-            if (admin) {
-                currentUser = username;
-                isAdmin = true;
-                loginSection.classList.add('hidden');
-                mainSection.classList.remove('hidden');
-                logoutBtn.classList.remove('hidden');
-                
-                // 初始化數據顯示
-                initMonthSelect();
-                initStudentSelect();
-                displayRecords();
-                displayStudents();
-                displayAdmins();
-                
-                // 開始自動刷新
-                startAutoRefresh();
-            } else {
-                // 如果不是管理員，也可以作為普通用戶登入
-                currentUser = username;
-                isAdmin = false;
-                loginSection.classList.add('hidden');
-                mainSection.classList.remove('hidden');
-                logoutBtn.classList.remove('hidden');
-                
-                // 初始化數據顯示
-                initMonthSelect();
-                initStudentSelect();
-                displayRecords();
-                displayStudents();
-                displayAdmins();
-                
-                // 普通用戶不能看到管理員選項
-                document.querySelector('.tab[data-tab="admins"]').classList.add('hidden');
-                
-                // 開始自動刷新
-                startAutoRefresh();
-            }
-        }
-        
-        // 登出
-        function logout() {
-            currentUser = null;
-            isAdmin = false;
-            loginSection.classList.remove('hidden');
-            mainSection.classList.add('hidden');
-            logoutBtn.classList.add('hidden');
-            usernameInput.value = '';
-            passwordInput.value = '';
-            loginError.textContent = '';
-            
-            // 重置選項卡
-            tabs.forEach(tab => tab.classList.remove('active'));
-            tabContents.forEach(content => content.classList.add('hidden'));
-            tabs[0].classList.add('active');
-            tabContents[0].classList.remove('hidden');
-            
-            // 顯示所有選項卡 (管理員選項可能被隱藏)
-            document.querySelector('.tab[data-tab="admins"]').classList.remove('hidden');
-            
-            // 停止自動刷新
-            stopAutoRefresh();
-        }
-        
-        // 事件監聽器
-        loginBtn.addEventListener('click', login);
-        logoutBtn.addEventListener('click', logout);
-        addRecordBtn.addEventListener('click', addRecord);
-        addStudentBtn.addEventListener('click', addStudent);
-        addAdminBtn.addEventListener('click', addAdmin);
-        
-        // 按Enter鍵登入
-        passwordInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                login();
-            }
-        });
-        
-        // 月份選擇器變化
-        monthSelect.addEventListener('change', function() {
-            displayRecords(this.value);
-        });
-        
-        // 選項卡切換
-        tabs.forEach(tab => {
-            tab.addEventListener('click', function() {
-                const tabName = this.getAttribute('data-tab');
-                
-                // 更新選項卡狀態
-                tabs.forEach(t => t.classList.remove('active'));
-                this.classList.add('active');
-                
-                // 更新內容顯示
-                tabContents.forEach(content => content.classList.add('hidden'));
-                document.getElementById(`${tabName}Tab`).classList.remove('hidden');
-            });
-        });
-    </script>
+    <!-- 登入區塊 -->
+    <div id="loginSection">
+      <div class="login-form">
+        <h2>登入</h2>
+        <div id="loginError" class="error"></div>
+        <input type="text" id="username" placeholder="帳號" required>
+        <input type="password" id="password" placeholder="密碼 (4位數字以上)" required>
+        <button id="loginBtn">登入</button>
+      </div>
+    </div>
+
+    <!-- 主功能區塊 -->
+    <div id="mainSection" class="hidden">
+      <div class="tabs">
+        <div class="tab active" data-tab="records">餐費紀錄</div>
+        <div class="tab" data-tab="students">學生管理</div>
+        <div class="tab" data-tab="admins">管理員設定</div>
+      </div>
+
+      <!-- 餐費紀錄頁面 -->
+      <div id="recordsTab" class="tab-content">
+        <div class="month-selector">
+          <select id="monthSelect">
+            <option value="0">全部月份</option>
+          </select>
+        </div>
+
+        <div class="stats">
+          <h3>統計資訊</h3>
+          <p id="totalRecords">總紀錄數: 0</p>
+          <p id="totalAmount">總金額: $0</p>
+          <p id="totalPaid">已付款金額: $0</p>
+          <p id="totalUnpaid">未付款金額: $0</p>
+        </div>
+
+        <div class="record-form">
+          <h3>新增餐費紀錄</h3>
+          <div id="recordError" class="error"></div>
+          <div id="recordSuccess" class="success"></div>
+          <select id="studentSelect" required>
+            <option value="">選擇學生</option>
+          </select>
+          <input type="date" id="recordDate" required>
+          <input type="number" id="recordAmount" placeholder="金額" required>
+          <button id="addRecordBtn">新增紀錄</button>
+        </div>
+
+        <table id="recordsTable">
+          <thead>
+            <tr>
+              <th>日期</th>
+              <th>學生姓名</th>
+              <th>年級</th>
+              <th>金額</th>
+              <th>填寫人員</th>
+              <th>付款狀態</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody id="recordsBody"></tbody>
+        </table>
+      </div>
+      <!-- 學生管理頁面 -->
+      <div id="studentsTab" class="tab-content hidden">
+        <div class="student-form">
+          <h3>學生管理</h3>
+          <div id="studentError" class="error"></div>
+          <div id="studentSuccess" class="success"></div>
+          <input type="text" id="studentName" placeholder="學生姓名" required>
+          <select id="studentGrade" required>
+            <option value="">選擇年級</option>
+            <option value="1">一年級</option>
+            <option value="2">二年級</option>
+            <option value="3">三年級</option>
+            <option value="4">四年級</option>
+            <option value="5">五年級</option>
+            <option value="6">六年級</option>
+          </select>
+          <button id="addStudentBtn">添加學生</button>
+        </div>
+
+        <table id="studentsTable">
+          <thead>
+            <tr>
+              <th>學生ID</th>
+              <th>學生姓名</th>
+              <th>年級</th>
+              <th>總金額</th>
+              <th>月份統計</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody id="studentsBody"></tbody>
+        </table>
+      </div>
+
+      <!-- 管理員設定頁面 -->
+      <div id="adminsTab" class="tab-content hidden">
+        <div class="admin-form">
+          <h3>管理員設定</h3>
+          <div id="adminError" class="error"></div>
+          <div id="adminSuccess" class="success"></div>
+          <input type="text" id="adminUsername" placeholder="帳號" required>
+          <input type="password" id="adminPassword" placeholder="密碼 (4位數字以上)" required>
+          <button id="addAdminBtn">添加管理員</button>
+        </div>
+
+        <table id="adminsTable">
+          <thead>
+            <tr>
+              <th>帳號</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody id="adminsBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+<script>
+let currentUser = null;
+let isAdmin = false;
+let students = [];
+let records = [];
+let admins = [];
+
+const loginSection = document.getElementById('loginSection');
+const mainSection = document.getElementById('mainSection');
+const logoutBtn = document.getElementById('logoutBtn');
+const loginBtn = document.getElementById('loginBtn');
+const usernameInput = document.getElementById('username');
+const passwordInput = document.getElementById('password');
+const loginError = document.getElementById('loginError');
+
+const studentSelect = document.getElementById('studentSelect');
+const recordDate = document.getElementById('recordDate');
+const recordAmount = document.getElementById('recordAmount');
+const addRecordBtn = document.getElementById('addRecordBtn');
+const recordsBody = document.getElementById('recordsBody');
+const monthSelect = document.getElementById('monthSelect');
+
+const studentName = document.getElementById('studentName');
+const studentGrade = document.getElementById('studentGrade');
+const addStudentBtn = document.getElementById('addStudentBtn');
+const studentsBody = document.getElementById('studentsBody');
+
+const adminUsername = document.getElementById('adminUsername');
+const adminPassword = document.getElementById('adminPassword');
+const addAdminBtn = document.getElementById('addAdminBtn');
+const adminsBody = document.getElementById('adminsBody');
+
+const recordError = document.getElementById('recordError');
+const recordSuccess = document.getElementById('recordSuccess');
+const studentError = document.getElementById('studentError');
+const studentSuccess = document.getElementById('studentSuccess');
+const adminError = document.getElementById('adminError');
+const adminSuccess = document.getElementById('adminSuccess');
+
+const totalRecordsEl = document.getElementById('totalRecords');
+const totalAmountEl = document.getElementById('totalAmount');
+const totalPaidEl = document.getElementById('totalPaid');
+const totalUnpaidEl = document.getElementById('totalUnpaid');
+
+const tabs = document.querySelectorAll('.tab');
+const tabContents = document.querySelectorAll('.tab-content');
+
+recordDate.valueAsDate = new Date();
+
+async function loadData() {
+  const res = await fetch('/data/lunch.json');
+  const data = await res.json();
+  students = data.students || [];
+  records = data.records || [];
+  admins = data.admins || [];
+}
+
+async function saveData() {
+  const data = { students, records, admins };
+  await fetch('/save-lunch', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  });
+}
+
+function login() {
+  const username = usernameInput.value.trim();
+  const password = passwordInput.value;
+
+  if (!username || !password) {
+    loginError.textContent = '請填寫帳號和密碼';
+    return;
+  }
+
+  fetch('/data/lunch.json')
+    .then(res => res.json())
+    .then(data => {
+      admins = data.admins || [];
+      const admin = admins.find(a => a.username === username && a.password === password);
+
+      if (admin) {
+        currentUser = username;
+        isAdmin = true;
+        loginSection.classList.add('hidden');
+        mainSection.classList.remove('hidden');
+        logoutBtn.classList.remove('hidden');
+
+        students = data.students || [];
+        records = data.records || [];
+
+        initMonthSelect();
+        initStudentSelect();
+        displayRecords();
+        displayStudents();
+        displayAdmins();
+      } else {
+        loginError.textContent = '僅限管理員登入';
+      }
+    });
+}
+function initMonthSelect() {
+  monthSelect.innerHTML = '<option value="0">全部月份</option>';
+  const months = new Set();
+  records.forEach(record => {
+    const date = new Date(record.date);
+    const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+    months.add(key);
+  });
+  Array.from(months).sort().reverse().forEach(month => {
+    const [year, m] = month.split('-');
+    const option = document.createElement('option');
+    option.value = month;
+    option.textContent = `${year}年${m}月`;
+    monthSelect.appendChild(option);
+  });
+}
+
+function initStudentSelect() {
+  studentSelect.innerHTML = '<option value="">選擇學生</option>';
+  students.forEach(student => {
+    const option = document.createElement('option');
+    option.value = student.id;
+    option.textContent = `${student.name} (${student.grade}年級)`;
+    studentSelect.appendChild(option);
+  });
+}
+
+function updateStats(filterMonth = '0') {
+  let filtered = [...records];
+  if (filterMonth !== '0') {
+    filtered = records.filter(r => {
+      const d = new Date(r.date);
+      const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+      return key === filterMonth;
+    });
+  }
+  const total = filtered.length;
+  const amount = filtered.reduce((sum, r) => sum + parseInt(r.amount), 0);
+  const paid = filtered.filter(r => r.paid).reduce((sum, r) => sum + parseInt(r.amount), 0);
+  const unpaid = amount - paid;
+
+  totalRecordsEl.textContent = `總紀錄數: ${total}`;
+  totalAmountEl.textContent = `總金額: $${amount}`;
+  totalPaidEl.textContent = `已付款金額: $${paid}`;
+  totalUnpaidEl.textContent = `未付款金額: $${unpaid}`;
+}
+
+function displayRecords(filterMonth = '0') {
+  recordsBody.innerHTML = '';
+  let filtered = [...records];
+  if (filterMonth !== '0') {
+    filtered = records.filter(r => {
+      const d = new Date(r.date);
+      const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+      return key === filterMonth;
+    });
+  }
+  filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+  filtered.forEach(record => {
+    const student = students.find(s => s.id === record.studentId);
+    if (!student) return;
+    const row = document.createElement('tr');
+    const date = new Date(record.date);
+    const formatted = `${date.getFullYear()}/${date.getMonth()+1}/${date.getDate()}`;
+    row.innerHTML = `
+      <td>${formatted}</td>
+      <td>${student.name}</td>
+      <td>${student.grade}年級</td>
+      <td>${record.amount}</td>
+      <td>${record.creator}</td>
+      <td>${record.paid ? '已付款' : '未付款'}</td>
+      <td></td>
+    `;
+    recordsBody.appendChild(row);
+  });
+  updateStats(filterMonth);
+}
+
+function getMonthlyStats(studentId) {
+  const stats = {};
+  records.forEach(r => {
+    if (r.studentId === studentId) {
+      const d = new Date(r.date);
+      const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+      if (!stats[key]) stats[key] = 0;
+      stats[key] += parseInt(r.amount);
+    }
+  });
+  return stats;
+}
+
+function displayStudents() {
+  studentsBody.innerHTML = '';
+  students.forEach(student => {
+    const total = records.filter(r => r.studentId === student.id).reduce((sum, r) => sum + parseInt(r.amount), 0);
+    const monthlyStats = getMonthlyStats(student.id);
+    let monthlyHTML = '';
+    for (const [month, amount] of Object.entries(monthlyStats)) {
+      monthlyHTML += `<p>${month}: $${amount}</p>`;
+    }
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td>${student.id}</td>
+      <td>${student.name}</td>
+      <td>${student.grade}年級</td>
+      <td>$${total}</td>
+      <td>${monthlyHTML}</td>
+      <td></td>
+    `;
+    studentsBody.appendChild(row);
+  });
+}
+
+function displayAdmins() {
+  adminsBody.innerHTML = '';
+  admins.forEach(admin => {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td>${admin.username}</td>
+      <td>${admin.username === 'BH19' ? '系統預設' : ''}</td>
+    `;
+    adminsBody.appendChild(row);
+  });
+}
+
+addRecordBtn.addEventListener('click', async () => {
+  const studentId = studentSelect.value;
+  const date = recordDate.value;
+  const amount = recordAmount.value;
+  if (!studentId || !date || !amount) {
+    recordError.textContent = '請填寫所有欄位';
+    return;
+  }
+  const newRecord = {
+    id: Date.now().toString(),
+    studentId,
+    date,
+    amount: parseInt(amount),
+    creator: currentUser,
+    paid: false
+  };
+  records.push(newRecord);
+  await saveData();
+  recordAmount.value = '';
+  recordError.textContent = '';
+  recordSuccess.textContent = '紀錄已添加';
+  initMonthSelect();
+  displayRecords(monthSelect.value);
+});
+
+addStudentBtn.addEventListener('click', async () => {
+  const name = studentName.value.trim();
+  const grade = studentGrade.value;
+  if (!name || !grade) {
+    studentError.textContent = '請填寫所有欄位';
+    return;
+  }
+  const newStudent = {
+    id: Date.now().toString(),
+    name,
+    grade: parseInt(grade)
+  };
+  students.push(newStudent);
+  await saveData();
+  studentName.value = '';
+  studentGrade.value = '';
+  studentSuccess.textContent = '學生已添加';
+  initStudentSelect();
+  displayStudents();
+});
+
+addAdminBtn.addEventListener('click', async () => {
+  const username = adminUsername.value.trim();
+  const password = adminPassword.value;
+  if (!username || !password || !/^\d{4,}$/.test(password)) {
+    adminError.textContent = '請填寫有效帳號與密碼';
+    return;
+  }
+  if (admins.some(a => a.username === username)) {
+    adminError.textContent = '此帳號已存在';
+    return;
+  }
+  const newAdmin = { username, password };
+  admins.push(newAdmin);
+  await saveData();
+  adminUsername.value = '';
+  adminPassword.value = '';
+  adminSuccess.textContent = '管理員已添加';
+  displayAdmins();
+});
+
+logoutBtn.addEventListener('click', () => {
+  currentUser = null;
+  isAdmin = false;
+  loginSection.classList.remove('hidden');
+  mainSection.classList.add('hidden');
+  logoutBtn.classList.add('hidden');
+  usernameInput.value = '';
+  passwordInput.value = '';
+  loginError.textContent = '';
+});
+
+loginBtn.addEventListener('click', login);
+passwordInput.addEventListener('keypress', e => {
+  if (e.key === 'Enter') login();
+});
+monthSelect.addEventListener('change', () => {
+  displayRecords(monthSelect.value);
+});
+tabs.forEach(tab => {
+  tab.addEventListener('click', function () {
+    const tabName = this.getAttribute('data-tab');
+    tabs.forEach(t => t.classList.remove('active'));
+    this.classList.add('active');
+    tabContents.forEach(c => c.classList.add('hidden'));
+    document.getElementById(`${tabName}Tab`).classList.remove('hidden');
+  });
+});
+</script>
 </body>
 </html>
